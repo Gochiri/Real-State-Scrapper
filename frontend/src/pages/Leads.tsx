@@ -3,7 +3,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link, useSearchParams } from 'react-router-dom'
 import {
   Search,
-  Filter,
   ChevronLeft,
   ChevronRight,
   ExternalLink,
@@ -18,7 +17,7 @@ import {
 } from 'lucide-react'
 import clsx from 'clsx'
 import { leadsApi, type Lead } from '../services/api'
-import { ScoreBadge, getScoreCategory } from '../components/ScoreBar'
+import { ScoreBadge } from '../components/ScoreBar'
 import TechStackBadges from '../components/TechStackBadges'
 
 export default function Leads() {
@@ -26,7 +25,6 @@ export default function Leads() {
   const queryClient = useQueryClient()
 
   const [selectedLeads, setSelectedLeads] = useState<number[]>([])
-  const [showFilters, setShowFilters] = useState(false)
 
   // Parse params
   const page = parseInt(searchParams.get('page') || '1')

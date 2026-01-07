@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
-  Search,
   Play,
   CheckCircle,
   XCircle,
@@ -10,7 +9,7 @@ import {
   MapPin
 } from 'lucide-react'
 import clsx from 'clsx'
-import { scrapingApi } from '../services/api'
+import { scrapingApi, type ScrapingJob } from '../services/api'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 
@@ -125,7 +124,7 @@ export default function Scraping() {
   )
 }
 
-function JobCard({ job }: { job: ReturnType<typeof scrapingApi.getJobs> extends Promise<infer T> ? T[number] : never }) {
+function JobCard({ job }: { job: ScrapingJob }) {
   const statusConfig = {
     pending: { icon: Clock, color: 'text-gray-500', bg: 'bg-gray-100', label: 'Pendiente' },
     running: { icon: Loader2, color: 'text-blue-500', bg: 'bg-blue-100', label: 'En progreso', spin: true },

@@ -9,7 +9,7 @@ import {
   MapPin
 } from 'lucide-react'
 import { statsApi } from '../services/api'
-import ScoreBar, { ScoreBadge } from '../components/ScoreBar'
+import { ScoreBadge } from '../components/ScoreBar'
 
 export default function Dashboard() {
   const { data: stats, isLoading } = useQuery({

@@ -14,7 +14,6 @@ import {
   X,
   Check
 } from 'lucide-react'
-import clsx from 'clsx'
 import type { TechStack } from '../services/api'
 
 interface TechStackBadgesProps {
