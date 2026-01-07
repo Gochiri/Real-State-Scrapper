@@ -13,7 +13,10 @@ import {
   Upload,
   RefreshCw,
   Check,
-  X
+  X,
+  Sparkles,
+  Filter,
+  Users
 } from 'lucide-react'
 import clsx from 'clsx'
 import { leadsApi, type Lead } from '../services/api'
@@ -95,20 +98,23 @@ export default function Leads() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-slide-up">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Leads</h1>
-          <p className="text-gray-500">{data?.total || 0} leads en total</p>
+          <h1 className="text-3xl font-bold text-slate-900">Leads</h1>
+          <p className="text-slate-500 mt-1">{data?.total || 0} inmobiliarias encontradas</p>
         </div>
 
         {selectedLeads.length > 0 && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">{selectedLeads.length} seleccionados</span>
+          <div className="flex items-center gap-3 animate-slide-up">
+            <span className="text-sm text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg">
+              {selectedLeads.length} seleccionados
+            </span>
             <button
               onClick={() => analyzeMutation.mutate(selectedLeads)}
               disabled={analyzeMutation.isPending}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-sm font-medium shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
             >
               <RefreshCw className={clsx('w-4 h-4', analyzeMutation.isPending && 'animate-spin')} />
               Analizar
@@ -116,7 +122,7 @@ export default function Leads() {
             <button
               onClick={() => exportMutation.mutate({ lead_ids: selectedLeads })}
               disabled={exportMutation.isPending}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-medium shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
             >
               <Upload className={clsx('w-4 h-4', exportMutation.isPending && 'animate-spin')} />
               Exportar a GHL
@@ -125,19 +131,23 @@ export default function Leads() {
         )}
       </div>
 
-      {/* Search and filters */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4">
+      {/* Filters */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Filter className="w-4 h-4 text-slate-400" />
+          <span className="text-sm font-medium text-slate-600">Filtros</span>
+        </div>
         <div className="flex flex-wrap gap-4">
           {/* Search */}
-          <div className="flex-1 min-w-[200px]">
+          <div className="flex-1 min-w-[250px]">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
               <input
                 type="text"
                 placeholder="Buscar por nombre, email..."
                 value={search}
                 onChange={(e) => updateParam('search', e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="input-modern pl-12"
               />
             </div>
           </div>
@@ -146,7 +156,7 @@ export default function Leads() {
           <select
             value={city}
             onChange={(e) => updateParam('city', e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="select-modern"
           >
             <option value="">Todas las ciudades</option>
             <option value="Buenos Aires">Buenos Aires</option>
@@ -160,24 +170,24 @@ export default function Leads() {
           <select
             value={minScore}
             onChange={(e) => updateParam('min_score', e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="select-modern"
           >
             <option value="">Todos los scores</option>
-            <option value="80">80+ (Hot)</option>
-            <option value="60">60+ (Warm)</option>
-            <option value="40">40+ (Medium)</option>
-            <option value="20">20+ (Cool)</option>
+            <option value="80">🔥 80+ (Hot)</option>
+            <option value="60">⚡ 60+ (Warm)</option>
+            <option value="40">📊 40+ (Medium)</option>
+            <option value="20">❄️ 20+ (Cool)</option>
           </select>
 
           {/* Analyzed filter */}
           <select
             value={isAnalyzed}
             onChange={(e) => updateParam('is_analyzed', e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="select-modern"
           >
             <option value="">Todos</option>
-            <option value="true">Analizados</option>
-            <option value="false">Sin analizar</option>
+            <option value="true">✅ Analizados</option>
+            <option value="false">⏳ Sin analizar</option>
           </select>
 
           {/* Sort */}
@@ -188,10 +198,10 @@ export default function Leads() {
               updateParam('sort_by', by)
               updateParam('sort_order', order)
             }}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="select-modern"
           >
-            <option value="opportunity_score-desc">Score (mayor primero)</option>
-            <option value="opportunity_score-asc">Score (menor primero)</option>
+            <option value="opportunity_score-desc">Score (mayor)</option>
+            <option value="opportunity_score-asc">Score (menor)</option>
             <option value="created_at-desc">Más recientes</option>
             <option value="name-asc">Nombre A-Z</option>
             <option value="rating-desc">Mejor rating</option>
@@ -200,35 +210,38 @@ export default function Leads() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
+            <div className="relative">
+              <div className="w-16 h-16 rounded-full border-4 border-indigo-100 border-t-indigo-500 animate-spin" />
+              <Sparkles className="absolute inset-0 m-auto w-6 h-6 text-indigo-500" />
+            </div>
           </div>
-        ) : (
+        ) : data?.items && data.items.length > 0 ? (
           <>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="px-4 py-3 text-left">
+                <thead>
+                  <tr className="bg-slate-50/80">
+                    <th className="px-5 py-4 text-left">
                       <input
                         type="checkbox"
                         checked={data?.items && selectedLeads.length === data.items.length}
                         onChange={toggleSelectAll}
-                        className="rounded border-gray-300"
+                        className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                       />
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Inmobiliaria</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ciudad</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contacto</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rating</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Score</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stack</th>
+                    <th className="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Inmobiliaria</th>
+                    <th className="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Ciudad</th>
+                    <th className="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Contacto</th>
+                    <th className="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Rating</th>
+                    <th className="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Score</th>
+                    <th className="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Estado</th>
+                    <th className="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Stack</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-slate-100">
                   {data?.items.map((lead) => (
                     <LeadRow
                       key={lead.id}
@@ -243,32 +256,47 @@ export default function Leads() {
 
             {/* Pagination */}
             {data && data.pages > 1 && (
-              <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
-                <p className="text-sm text-gray-600">
-                  Mostrando {((page - 1) * 20) + 1} - {Math.min(page * 20, data.total)} de {data.total}
+              <div className="flex items-center justify-between px-5 py-4 border-t border-slate-100 bg-slate-50/50">
+                <p className="text-sm text-slate-500">
+                  Mostrando <span className="font-medium text-slate-700">{((page - 1) * 20) + 1}</span> - <span className="font-medium text-slate-700">{Math.min(page * 20, data.total)}</span> de <span className="font-medium text-slate-700">{data.total}</span>
                 </p>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => updateParam('page', String(page - 1))}
                     disabled={page === 1}
-                    className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-2 rounded-xl hover:bg-white hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
-                    <ChevronLeft className="w-5 h-5" />
+                    <ChevronLeft className="w-5 h-5 text-slate-600" />
                   </button>
-                  <span className="text-sm text-gray-600">
-                    Página {page} de {data.pages}
+                  <span className="text-sm text-slate-600 px-3">
+                    Página <span className="font-medium">{page}</span> de <span className="font-medium">{data.pages}</span>
                   </span>
                   <button
                     onClick={() => updateParam('page', String(page + 1))}
                     disabled={page === data.pages}
-                    className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-2 rounded-xl hover:bg-white hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronRight className="w-5 h-5 text-slate-600" />
                   </button>
                 </div>
               </div>
             )}
           </>
+        ) : (
+          <div className="p-12 text-center">
+            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-slate-100 flex items-center justify-center">
+              <Users className="w-10 h-10 text-slate-400" />
+            </div>
+            <p className="text-lg font-medium text-slate-700 mb-2">No hay leads</p>
+            <p className="text-slate-500 mb-4">Inicia un scraping para encontrar inmobiliarias</p>
+            <Link
+              to="/scraping"
+              className="btn-gradient px-5 py-2.5 rounded-xl inline-flex items-center gap-2"
+            >
+              <Search className="w-4 h-4" />
+              Ir a Scraping
+            </Link>
+          </div>
         )}
       </div>
     </div>
@@ -285,87 +313,97 @@ function LeadRow({
   onSelect: () => void
 }) {
   return (
-    <tr className={clsx('hover:bg-gray-50', selected && 'bg-primary-50')}>
-      <td className="px-4 py-3">
+    <tr className={clsx(
+      'group transition-colors',
+      selected ? 'bg-indigo-50/50' : 'hover:bg-slate-50/80'
+    )}>
+      <td className="px-5 py-4">
         <input
           type="checkbox"
           checked={selected}
           onChange={onSelect}
-          className="rounded border-gray-300"
+          className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
         />
       </td>
-      <td className="px-4 py-3">
-        <Link to={`/leads/${lead.id}`} className="font-medium text-gray-900 hover:text-primary-600">
-          {lead.name}
-        </Link>
-        {lead.website && (
-          <a
-            href={lead.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-2 text-gray-400 hover:text-gray-600"
-          >
-            <ExternalLink className="w-4 h-4 inline" />
-          </a>
-        )}
+      <td className="px-5 py-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-slate-500 font-semibold text-sm">
+            {lead.name.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <Link to={`/leads/${lead.id}`} className="font-medium text-slate-900 hover:text-indigo-600 transition-colors">
+              {lead.name}
+            </Link>
+            {lead.website && (
+              <a
+                href={lead.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-2 text-slate-400 hover:text-indigo-500 transition-colors"
+              >
+                <ExternalLink className="w-3.5 h-3.5 inline" />
+              </a>
+            )}
+          </div>
+        </div>
       </td>
-      <td className="px-4 py-3">
-        <span className="flex items-center gap-1 text-sm text-gray-600">
-          <MapPin className="w-4 h-4" />
+      <td className="px-5 py-4">
+        <span className="flex items-center gap-1.5 text-sm text-slate-600">
+          <MapPin className="w-4 h-4 text-slate-400" />
           {lead.city || '-'}
         </span>
       </td>
-      <td className="px-4 py-3">
-        <div className="flex flex-col gap-1 text-sm">
+      <td className="px-5 py-4">
+        <div className="flex flex-col gap-1.5">
           {lead.phone && (
-            <a href={`tel:${lead.phone}`} className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
-              <Phone className="w-3 h-3" />
+            <a href={`tel:${lead.phone}`} className="flex items-center gap-1.5 text-sm text-slate-600 hover:text-indigo-600 transition-colors">
+              <Phone className="w-3.5 h-3.5" />
               {lead.phone}
             </a>
           )}
           {lead.email && (
-            <a href={`mailto:${lead.email}`} className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
-              <Mail className="w-3 h-3" />
-              {lead.email}
+            <a href={`mailto:${lead.email}`} className="flex items-center gap-1.5 text-sm text-slate-600 hover:text-indigo-600 transition-colors">
+              <Mail className="w-3.5 h-3.5" />
+              <span className="truncate max-w-[150px]">{lead.email}</span>
             </a>
           )}
         </div>
       </td>
-      <td className="px-4 py-3">
+      <td className="px-5 py-4">
         {lead.rating ? (
-          <span className="flex items-center gap-1 text-sm">
-            <Star className="w-4 h-4 text-yellow-400 fill-current" />
-            {lead.rating.toFixed(1)}
-            <span className="text-gray-400">({lead.reviews_count})</span>
+          <span className="flex items-center gap-1.5 text-sm">
+            <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+            <span className="font-medium text-slate-700">{lead.rating.toFixed(1)}</span>
+            <span className="text-slate-400">({lead.reviews_count})</span>
           </span>
         ) : (
-          <span className="text-gray-400">-</span>
+          <span className="text-slate-400 text-sm">-</span>
         )}
       </td>
-      <td className="px-4 py-3">
-        <ScoreBadge score={lead.opportunity_score} />
+      <td className="px-5 py-4">
+        <ScoreBadge score={lead.opportunity_score} size="sm" />
       </td>
-      <td className="px-4 py-3">
+      <td className="px-5 py-4">
         <div className="flex items-center gap-2">
           <span className={clsx(
-            'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium',
-            lead.is_analyzed ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
+            'badge',
+            lead.is_analyzed ? 'badge-success' : 'bg-slate-100 text-slate-600'
           )}>
             {lead.is_analyzed ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
             {lead.is_analyzed ? 'Analizado' : 'Pendiente'}
           </span>
           {lead.is_exported_ghl && (
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+            <span className="badge badge-purple">
               GHL
             </span>
           )}
         </div>
       </td>
-      <td className="px-4 py-3">
+      <td className="px-5 py-4">
         {lead.tech_stack ? (
           <TechStackBadges techStack={lead.tech_stack} compact showMissing={false} />
         ) : (
-          <span className="text-gray-400 text-sm">Sin analizar</span>
+          <span className="text-slate-400 text-sm">Sin analizar</span>
         )}
       </td>
     </tr>
