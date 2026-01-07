@@ -116,7 +116,6 @@ export function ScoreBadge({ score, size = 'md' }: { score: number; size?: 'sm' 
 }
 
 export function ScoreRing({ score, size = 80 }: { score: number; size?: number }) {
-  const category = getScoreCategory(score)
   const circumference = 2 * Math.PI * 36
   const strokeDashoffset = circumference - (score / 100) * circumference
 
